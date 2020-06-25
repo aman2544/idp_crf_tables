@@ -9,7 +9,7 @@ import csv
 import glob
 from config import paths
 print(paths)
-from config.paths import DATASET_PATH,IMAGE_PATH,MODEL_PATH
+from config.paths import DATASET_PATH,IMAGE_PATH,MODEL_PATH,WORD_IMAGE_PATH,WORD_FEATURES_PATH
 
 from common.todo_fix_this_later import Constants
 
@@ -771,39 +771,39 @@ def get_test_evidence(json_path):
 
 
 if __name__ == "__main__":
+    #
+    # #Input folder paths
+    # dataset_name = "invoice"
+    # IMAGE_PATH =IMAGE_PATH
+    #
+    # # with open(DATASET_PATH  + "/ground_truth.json", "r")as gt_file:
+    # #     gt = json.load(gt_file)
+    #
+    #
+    # # evidence_df = pd.read_csv(DATASET_PATH+"/Features.tsv",sep="\t")
+    #
+    # #Output folder paths
+    # op_folder = DATASET_PATH + "/word_features/"
+    # op_folder='/Users/amandubey/Documents/RZT/Tables_test_set/output_csv_folder/'
+    # #op_image_folder = op_folder + "images/"
+    #
+    # #Open output file and write the column titles
 
-    #Input folder paths
-    dataset_name = "invoice"
-    IMAGE_PATH =IMAGE_PATH
-
-    # with open(DATASET_PATH  + "/ground_truth.json", "r")as gt_file:
-    #     gt = json.load(gt_file)
 
 
-    # evidence_df = pd.read_csv(DATASET_PATH+"/Features.tsv",sep="\t")
-
-    #Output folder paths
-    op_folder = DATASET_PATH + "/word_features/"
-    op_folder='/Users/amandubey/Documents/RZT/Tables_test_set/output_csv_folder/'
-    #op_image_folder = op_folder + "images/"
-
-    #Open output file and write the column titles
-
-
-
-    #Iterate over each image
-    #keys = [k.rsplit(".",1)[0] for k in gt.keys()]
-    WORD_IMAGE_PATH= '/Users/amandubey/Documents/RZT/Tables_test_set/input_folder/words_image/'
-    json_folder='/Users/amandubey/Documents/RZT/Tables_test_set/input_folder/evidence_folder/'
-    a=2
-    json_files=os.listdir(json_folder)
+    # Iterate over each image
+    # keys = [k.rsplit(".",1)[0] for k in gt.keys()]
+    # WORD_IMAGE_PATH= '/Users/amandubey/Documents/RZT/Tables_test_set/input_folder/words_image/'
+    JSON_FOLDER= '/Users/amandubey/Documents/RZT/Tables_test_set/input_folder/evidence_folder/'
+    # a=2
+    json_files=os.listdir(JSON_FOLDER)
     # for key in keys:
     for json_path in json_files:
         if json_path.startswith('.'):
             continue
         key=(json_path.split('.json'))[0]
 
-        json_path=json_folder+key+'.json'
+        json_path= JSON_FOLDER + key + '.json'
 
         _image_path = IMAGE_PATH + key+".jpg"
         image = cv2.imread(_image_path)
@@ -824,7 +824,7 @@ if __name__ == "__main__":
         '[t,l,b,r]'
 
         # Open output file and write the column titles
-        f = open(op_folder + key+"_Features.tsv", "w", encoding="utf-8")
+        f = open(WORD_FEATURES_PATH + key+"_Features.tsv", "w", encoding="utf-8")
         writer = csv.writer(f, delimiter="\t")
         columns = ['Filename','Text','Coordinates','Number_of_words_left_aligned_above','Number_of_words_left_aligned_above_contigous',
                    'Number_of_words_left_aligned_below_contigous','Number_of_words_left_aligned_below',
@@ -891,8 +891,8 @@ if __name__ == "__main__":
         #cv2.imwrite(op_image_folder + key+".jpg", image)
         f.close()
         cv2.imwrite(WORD_IMAGE_PATH + key + '.jpg', image)
-        print()
-    print()
+        # print()
+    # print()
 
 
     

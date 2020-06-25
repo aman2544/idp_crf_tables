@@ -16,7 +16,8 @@ import math
 from sklearn.cluster import MeanShift
 import random
 
-from config.paths import PREDICTION_RESULTS_PATH, IMAGE_PATH, EVIDENCE_PATH
+from config.paths import PREDICTION_RESULTS_PATH, IMAGE_PATH, JSON_FOLDER,WORD_FEATURES_PATH,\
+    PREDICTION_IMAGES_RESULT_PATH,POSTPROCESSING_RESULT_PATH,PREDICTION_JSON_RESULT_PATH
 
 colors =[(0, 0, 255), (0, 255, 0),(0,0,0), (255, 255, 0), (0, 255, 255), (255, 0, 255)]
 
@@ -449,30 +450,33 @@ images_for_prediction = ["10.1.1.160.529_30"]
 #images_for_prediction = ['10.1.1.1.2006_3',"10.1.1.160.506_4",]
 
 if __name__ =="__main__":
-    print(PREDICTION_RESULTS_PATH+"crf_rf_4/op_images")
-    files = os.listdir(PREDICTION_RESULTS_PATH+"crf_rf_4/op_images")
+    files = os.listdir(PREDICTION_IMAGES_RESULT_PATH)
     images_for_prediction = [f.rsplit(".",1)[0] for f in files]
-    EVIDENCE_PATH='/Users/amandubey/Documents/RZT/Tables_test_set/input_folder/evidence_folder/'
 
     for image_for_prediction in images_for_prediction:
-        if image_for_prediction=='5e98958f0570c934f8b2a005_0':
-            print('skipping ',image_for_prediction)
-            continue
-        # data=pd.read_csv(PREDICTION_RESULTS_PATH + model_name +"/page_level_predictions/"+image_for_prediction+".tsv",sep="\t")
-        preds={}
-        # for coord,label in zip(data["Coordinates"].tolist(),data[LABEL_COLUMN].tolist()):
-        #     preds[coord]=label
-        #
-        jpg_ = IMAGE_PATH + "/" + image_for_prediction + ".jpg"
-        print(jpg_)
-        print(EVIDENCE_PATH+ image_for_prediction + ".json")
-        image=cv2.imread(jpg_)
-        evidence_filename = EVIDENCE_PATH+ image_for_prediction + ".json"
-        preds=json.load(open('/Users/amandubey/Documents/RZT/Tables_test_set/crf_rf_4/word_predictions/'+image_for_prediction + ".json"))
-        evidence=json.load(open(evidence_filename))
-        localisation = TableLocalisation(image, evidence, preds, image_for_prediction)
-        print("Processing",image_for_prediction)
-        localisation.run()
-        cv2.imwrite(PREDICTION_RESULTS_PATH + "crf_rf_4/after_post_processing/"+image_for_prediction + ".jpg", localisation.image)
-
+        try:
+            if image_for_prediction == '5e98958f0570c934f8b2a005_0' or image_for_prediction.startswith('.') or image_for_prediction=='':
+                print('skipping ', image_for_prediction)
+                continue
+            print('image_for_prediction',image_for_prediction)
+            preds = {}
+            # data=pd.read_csv(PREDICTION_RESULTS_PATH + model_name +"/page_level_predictions/"+image_for_prediction+".tsv",sep="\t")
+            # for coord,label in zip(data["Coordinates"].tolist(),data[LABEL_COLUMN].tolist()):
+            #     preds[coord]=label
+            #
+            jpg_ = IMAGE_PATH + "/" + image_for_prediction + ".jpg"
+            print(jpg_)
+            print(JSON_FOLDER + image_for_prediction + ".json")
+            image = cv2.imread(jpg_)
+            evidence_filename = JSON_FOLDER + image_for_prediction + ".json"
+            preds = json.load(open(PREDICTION_JSON_RESULT_PATH + image_for_prediction + ".json"))
+            evidence = json.load(open(evidence_filename))
+            localisation = TableLocalisation(image, evidence, preds, image_for_prediction)
+            print("Processing", image_for_prediction)
+            localisation.run()
+            cv2.imwrite(POSTPROCESSING_RESULT_PATH + image_for_prediction + ".jpg",
+                        localisation.image)
+        except Exception as e:
+            raise e
+            print('Error !!!!')
 

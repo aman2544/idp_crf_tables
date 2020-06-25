@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 from sklearn.metrics import roc_auc_score,precision_score,recall_score,f1_score,accuracy_score
 from common.todo_fix_this_later import Constants
+from config.paths import PREDICTION_JSON_RESULT_PATH,PREDICTION_IMAGES_RESULT_PATH
 import math
 import os
 import json
@@ -60,8 +61,8 @@ def save_prediction_results_crf(model,graph, data, output_folder, image_folder):
     event_rates = []
     number_of_table_words = []
     number_of_nontable_words = []
-    output_image_folder=output_folder+'op_images/'
-    output_json_folder=output_folder+'word_predictions/'
+    output_image_folder=PREDICTION_IMAGES_RESULT_PATH
+    output_json_folder=PREDICTION_JSON_RESULT_PATH
 
     if not os.path.isdir(output_image_folder):
         os.mkdir(output_image_folder)
